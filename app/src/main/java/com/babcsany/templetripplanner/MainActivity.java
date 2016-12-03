@@ -1,5 +1,7 @@
 package com.babcsany.templetripplanner;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +15,7 @@ import android.widget.EditText;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,8 +34,26 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                EditText arrivalDateEdit = (EditText) findViewById(R.id.editTextArrivalDate);
+                EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
+                if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
+                    String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                            ((Calendar) arrivalDateEdit.getTag()).getTime());
+                    String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                            ((Calendar) leavingDateEdit.getTag()).getTime());
+                    emailIntent.putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            String.format(
+                                    getString(R.string.subject_reservationEmail),
+                                    formattedArrivalDate,
+                                    formattedLeavingDate,
+                                    1
+                            )
+                    );
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.body_emailReservation), formattedArrivalDate, formattedLeavingDate));
+                    startActivity(Intent.createChooser(emailIntent, "Send email"));
+                }
             }
         });
     }
