@@ -1,8 +1,11 @@
 package com.babcsany.templetripplanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -37,22 +40,36 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 EditText arrivalDateEdit = (EditText) findViewById(R.id.editTextArrivalDate);
                 EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
                 if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
-                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
-                    String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                            ((Calendar) arrivalDateEdit.getTag()).getTime());
-                    String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                            ((Calendar) leavingDateEdit.getTag()).getTime());
-                    emailIntent.putExtra(
-                            Intent.EXTRA_SUBJECT,
-                            String.format(
-                                    getString(R.string.subject_reservationEmail),
-                                    formattedArrivalDate,
-                                    formattedLeavingDate,
-                                    1
-                            )
-                    );
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.body_emailReservation), formattedArrivalDate, formattedLeavingDate));
-                    startActivity(Intent.createChooser(emailIntent, "Send email"));
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    String name = preferences.getString("name_in_email_signature", null);
+                    if (null != name) {
+                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
+                        String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                                ((Calendar) arrivalDateEdit.getTag()).getTime());
+                        String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                                ((Calendar) leavingDateEdit.getTag()).getTime());
+                        emailIntent.putExtra(
+                                Intent.EXTRA_SUBJECT,
+                                String.format(
+                                        getString(R.string.subject_reservationEmail),
+                                        formattedArrivalDate,
+                                        formattedLeavingDate,
+                                        1
+                                )
+                        );
+                        emailIntent.putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                        getString(R.string.body_emailReservation),
+                                        formattedArrivalDate,
+                                        formattedLeavingDate,
+                                        name
+                                )
+                        );
+                        startActivity(Intent.createChooser(emailIntent, "Send email"));
+                    } else {
+                        showSettings(null);
+                    }
                 }
             }
         });
@@ -128,5 +145,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         args.putInt(KEY_DATE_EDIT_TEXT_VIEW, R.id.editTextLeavingDate);
         dpd.setArguments(args);
         dpd.show(getFragmentManager(), "Datepickerdialog");
+    }
+
+    public void showSettings(MenuItem item) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
