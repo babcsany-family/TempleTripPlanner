@@ -10,11 +10,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
@@ -25,6 +27,7 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
+    public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
                 if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                    String name = preferences.getString("name_in_email_signature", null);
+                    String name = preferences.getString(NAME_IN_EMAIL_SIGNATURE, null);
                     if (null != name) {
                         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
                         String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
@@ -73,6 +76,23 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 }
             }
         });
+
+        String name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
+        if (null == name || "".compareTo(name.trim()) == 0) {
+            new MaterialDialog.Builder(this)
+                    .title(R.string.dialog_title_display_name)
+                    .content(R.string.dialog_content_display_name)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(R.string.input_firstname_lastname_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(NAME_IN_EMAIL_SIGNATURE, input.toString());
+                            editor.commit();
+                        }
+                    }).show();
+        }
     }
 
     @Override

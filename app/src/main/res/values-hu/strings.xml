@@ -9,4 +9,8 @@
     <string name="pref_header_general">Általános</string>
     <string name="pref_title_display_name">E-mail alárásban szereplő név</string>
     <string name="title_activity_settings">Beállítások</string>
+    <string name="input_firstname_lastname_hint">Keresztnév Vezetéknév</string>
+    <string name="pref_ringtone_silent">Néma</string>
+    <string name="dialog_title_display_name">Név beállítása</string>
+    <string name="dialog_content_display_name">Add meg a neved úgy, ahogy az angol nyelvű e-mailek aláírásában használod</string>
 </resources>

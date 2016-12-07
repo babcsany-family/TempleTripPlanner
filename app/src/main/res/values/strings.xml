@@ -17,4 +17,8 @@
 
     <string name="pref_title_display_name">Display name in e-mail signature</string>
     <string name="pref_ringtone_silent">Silent</string>
+    <string name="input_firstname_lastname_hint">Firstname Lastname</string>
+    <string name="input_prefill" translatable="false" />
+    <string name="dialog_title_display_name">Setup Name</string>
+    <string name="dialog_content_display_name">Please enter your name as you would like to use in e-mail signature</string>
 </resources>
