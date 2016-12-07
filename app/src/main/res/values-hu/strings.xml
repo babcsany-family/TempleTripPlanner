@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Templomi út tervező</string>
+    <string name="action_settings">Beállítások</string>
+    <string name="arrival_date">Érkezés dátuma</string>
+    <string name="hint_leavingDate">Hazaindulás dátuma</string>
+    <string name="title_selectArrivalDate">Érkezés dátumának kiválasztása</string>
+    <string name="title_selectLeavingDate">Hazaindulás dátumának kiválasztása</string>
+    <string name="pref_header_general">Általános</string>
+    <string name="pref_title_display_name">E-mail alárásban szereplő név</string>
+    <string name="title_activity_settings">Beállítások</string>
+</resources>
