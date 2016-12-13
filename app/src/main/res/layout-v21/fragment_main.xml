@@ -34,7 +34,8 @@
         android:layout_alignTop="@+id/editTextArrivalDate"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_alignBaseline="@+id/editTextArrivalDate" />
+        android:layout_alignBaseline="@+id/editTextArrivalDate"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
     <EditText
         android:layout_width="wrap_content"

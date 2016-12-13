@@ -29,5 +29,6 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:3.0.0'
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.afollestad.material-dialogs:core:0.9.1.0'
+    provided "org.projectlombok:lombok:1.12.6"
     testCompile 'junit:junit:4.12'
 }

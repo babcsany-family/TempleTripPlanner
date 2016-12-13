@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -93,6 +94,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                         }
                     }).show();
         }
+
+        ListView patronsListView = (ListView) findViewById(R.id.patronsListView);
+
     }
 
     @Override
