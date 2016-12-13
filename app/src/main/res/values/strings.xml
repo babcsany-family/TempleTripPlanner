@@ -21,4 +21,9 @@
     <string name="input_prefill" translatable="false" />
     <string name="dialog_title_display_name">Setup Name</string>
     <string name="dialog_content_display_name">Please enter your name as you would like to use in e-mail signature</string>
+    <string name="patronKind_child">Child (less than 8 years old)</string>
+    <string name="patronKind_adult">Adult (greater than or equal to 8 years old)</string>
+    <string name="patronKind_templeWorker">Temple worker</string>
+    <string name="patronList_addNewPatron">Add new patron...</string>
+    <string name="description_addNewPatron">To add new patron please click here.</string>
 </resources>

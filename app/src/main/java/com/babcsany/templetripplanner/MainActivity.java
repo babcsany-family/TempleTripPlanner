@@ -1,19 +1,19 @@
 package com.babcsany.templetripplanner;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -22,8 +22,9 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -93,10 +94,26 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                             editor.commit();
                         }
                     }).show();
+            name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
         }
 
         ListView patronsListView = (ListView) findViewById(R.id.patronsListView);
-
+        List<Patron> patronList = new ArrayList<>();
+        patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
+        final Patron.PatronBuilder builder = Patron.builder().name(getString(R.string.patronList_addNewPatron));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.picture(getDrawable(R.drawable.ic_playlist_add_black_24px));
+        }
+        patronList.add(builder.build());
+        PatronAdapter patronAdapter = new PatronAdapter(this, patronList);
+        patronsListView.setAdapter(patronAdapter);
+        patronsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                parent.setSelection(position);
+                return true;
+            }
+        });
     }
 
     @Override
