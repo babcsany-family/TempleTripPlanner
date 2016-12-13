@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
     public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
         }
 
-        ListView patronsListView = (ListView) findViewById(R.id.patronsListView);
+        RecyclerView patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
         List<Patron> patronList = new ArrayList<>();
         patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
         final Patron.PatronBuilder builder = Patron.builder().name(getString(R.string.patronList_addNewPatron));
@@ -105,15 +108,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             builder.picture(getDrawable(R.drawable.ic_playlist_add_black_24px));
         }
         patronList.add(builder.build());
-        PatronAdapter patronAdapter = new PatronAdapter(this, patronList);
+        layoutManager = new LinearLayoutManager(this);
+        patronsListView.setLayoutManager(layoutManager);
+        PatronAdapter patronAdapter = new PatronAdapter(patronList);
         patronsListView.setAdapter(patronAdapter);
-        patronsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                parent.setSelection(position);
-                return true;
-            }
-        });
     }
 
     @Override

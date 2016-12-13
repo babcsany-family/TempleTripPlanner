@@ -51,12 +51,13 @@
         android:onClick="selectLeavingDate"
         android:focusable="false"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/editTextArrivalDate"
         android:layout_alignParentStart="true"
         android:id="@+id/patronsListView"
+        android:scrollbars="vertical"
         android:footerDividersEnabled="true" />
 
 </RelativeLayout>

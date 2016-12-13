@@ -1,6 +1,7 @@
 package com.babcsany.templetripplanner;
 
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 
 import lombok.Builder;
 import lombok.Data;
