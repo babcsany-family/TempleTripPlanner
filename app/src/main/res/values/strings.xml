@@ -26,4 +26,8 @@
     <string name="patronKind_templeWorker">Temple worker</string>
     <string name="patronList_addNewPatron">Add new patron...</string>
     <string name="description_addNewPatron">To add new patron please click here.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_firstname_lastname">Firstname Lastname</string>
 </resources>

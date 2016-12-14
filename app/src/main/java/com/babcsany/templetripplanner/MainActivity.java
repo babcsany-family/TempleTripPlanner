@@ -113,7 +113,14 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         patronList.add(builder.build());
         layoutManager = new LinearLayoutManager(this);
         patronsListView.setLayoutManager(layoutManager);
-        PatronAdapter patronAdapter = new PatronAdapter(patronList);
+        PatronAdapter patronAdapter = new PatronAdapter(patronList, new PatronAdapter.PatronViewHolder.IPatronClicks() {
+            @Override
+            public void onPatronClick(View caller) {
+                Intent intent = new Intent(MainActivity.this, PatronActivity.class);
+                intent.putExtra("patronPosition", -1);
+                startActivity(intent);
+            }
+        });
         patronsListView.setAdapter(patronAdapter);
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -211,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     public void addNewPatron(MenuItem item) {
-        Toast.makeText(this, "TO BE DONE!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, PatronActivity.class);
+        intent.putExtra("patronPosition", -1);
+        startActivity(intent);
     }
 }

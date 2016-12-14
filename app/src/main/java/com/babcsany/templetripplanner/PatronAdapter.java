@@ -1,6 +1,7 @@
 package com.babcsany.templetripplanner;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -22,28 +23,48 @@ import lombok.Data;
 
 public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronViewHolder> {
     private final List<Patron> patrons;
+    private PatronViewHolder.IPatronClicks listeners;
 
-    public static class PatronViewHolder extends RecyclerView.ViewHolder {
+    public static class PatronViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public ImageView picture;
         public TextView name;
         public TextView kind;
+        public IPatronClicks listeners;
 
-        public PatronViewHolder(View view) {
+        public PatronViewHolder(View view, IPatronClicks patronClickListeners) {
             super(view);
             picture = (ImageView) view.findViewById(R.id.patronImage);
             name = (TextView) view.findViewById(R.id.patronName);
             kind = (TextView) view.findViewById(R.id.patronKind);
+            listeners = patronClickListeners;
         }
+
+        @Override
+        public void onClick(View view) {
+            if (null != listeners) {
+                listeners.onPatronClick(view);
+            }
+        }
+
+        public static interface IPatronClicks {
+            public void onPatronClick(View caller);
+        }
+
     }
 
     public PatronAdapter(List<Patron> patrons) {
         this.patrons = patrons;
     }
 
+    public PatronAdapter(List<Patron> patrons, PatronViewHolder.IPatronClicks patronClicksListeners) {
+        this.patrons = patrons;
+        this.listeners = patronClicksListeners;
+    }
+
     @Override
     public PatronViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View rowView = LayoutInflater.from(parent.getContext()).inflate(R.layout.patron_row_layout, parent, false);
-        return new PatronViewHolder(rowView);
+        return new PatronViewHolder(rowView, listeners);
     }
 
     @Override

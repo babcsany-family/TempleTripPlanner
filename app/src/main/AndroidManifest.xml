@@ -26,6 +26,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.babcsany.templetripplanner.MainActivity" />
         </activity>
+        <activity android:name=".PatronActivity"></activity>
     </application>
 
 </manifest>
