@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
     public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
     private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView patronsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
         }
 
-        RecyclerView patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
+        patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
         List<Patron> patronList = new ArrayList<>();
         patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
         final Patron.PatronBuilder builder = Patron.builder().name(getString(R.string.patronList_addNewPatron));
@@ -112,6 +115,22 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         patronsListView.setLayoutManager(layoutManager);
         PatronAdapter patronAdapter = new PatronAdapter(patronList);
         patronsListView.setAdapter(patronAdapter);
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int swipedPosition = viewHolder.getAdapterPosition();
+                PatronAdapter adapter = (PatronAdapter) patronsListView.getAdapter();
+                adapter.remove(swipedPosition);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(patronsListView);
     }
 
     @Override
@@ -189,5 +208,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void showSettings(MenuItem item) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public void addNewPatron(MenuItem item) {
+        Toast.makeText(this, "TO BE DONE!", Toast.LENGTH_LONG).show();
     }
 }

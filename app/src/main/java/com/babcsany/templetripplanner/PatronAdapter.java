@@ -60,4 +60,10 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
     public int getItemCount() {
         return patrons.size();
     }
+
+    public void remove(int position) {
+        patrons.remove(position);
+        notifyItemRemoved(position);
+    }
+
 }
