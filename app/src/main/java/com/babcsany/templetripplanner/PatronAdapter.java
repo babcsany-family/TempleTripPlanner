@@ -37,6 +37,7 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
             name = (TextView) view.findViewById(R.id.patronName);
             kind = (TextView) view.findViewById(R.id.patronKind);
             listeners = patronClickListeners;
+            view.setOnClickListener(this);
         }
 
         @Override
