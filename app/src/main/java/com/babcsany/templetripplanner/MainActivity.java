@@ -115,9 +115,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         patronsListView.setLayoutManager(layoutManager);
         PatronAdapter patronAdapter = new PatronAdapter(patronList, new PatronAdapter.PatronViewHolder.IPatronClicks() {
             @Override
-            public void onPatronClick(View caller) {
+            public void onPatronClick(View patronView, int layoutPosition) {
                 Intent intent = new Intent(MainActivity.this, PatronActivity.class);
-                intent.putExtra("patronPosition", -1);
+                intent.putExtra("patronPosition", layoutPosition);
                 startActivity(intent);
             }
         });

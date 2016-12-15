@@ -43,12 +43,12 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
         @Override
         public void onClick(View view) {
             if (null != listeners) {
-                listeners.onPatronClick(view);
+                listeners.onPatronClick(view, this.getAdapterPosition());
             }
         }
 
         public static interface IPatronClicks {
-            public void onPatronClick(View caller);
+            public void onPatronClick(View patronView, int layoutPosition);
         }
 
     }
@@ -86,6 +86,10 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
     public void remove(int position) {
         patrons.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public Patron get(int position) {
+        return patrons.get(position);
     }
 
 }
