@@ -25,7 +25,8 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_input">
+        android:layout_below="@+id/name_input"
+        android:id="@+id/radioGroup_patronKind">
 
         <RadioButton
             android:text="@string/patronKind_child"

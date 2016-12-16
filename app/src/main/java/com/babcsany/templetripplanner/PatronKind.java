@@ -17,4 +17,15 @@ public enum PatronKind {
     public int getResourceId() {
         return resourceId;
     }
+
+    public static PatronKind getByResourceId(int resourceId) {
+        final PatronKind[] patronKinds = PatronKind.values();
+        for (int i = 0; i < patronKinds.length; i++) {
+            if (patronKinds[i].getResourceId() == resourceId) {
+                return patronKinds[i];
+            }
+        }
+        return null;
+    }
+
 }
