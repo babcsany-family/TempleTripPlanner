@@ -108,11 +108,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
         final List<Patron> patronList = new ArrayList<>();
         patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
-        final Patron.PatronBuilder builder = Patron.builder().name(getString(R.string.patronList_addNewPatron));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.picture(getDrawable(R.drawable.ic_playlist_add_black_24px));
-        }
-        patronList.add(builder.build());
         layoutManager = new LinearLayoutManager(this);
         patronsListView.setLayoutManager(layoutManager);
         PatronAdapter patronAdapter = new PatronAdapter(patronList, new PatronAdapter.PatronViewHolder.IPatronClicks() {
