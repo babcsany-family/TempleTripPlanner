@@ -1,5 +1,7 @@
 package com.babcsany.templetripplanner;
 
+import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -27,10 +29,14 @@ public class PatronActivity extends AppCompatActivity {
 
     public void doPatronAction(MenuItem item) {
         final int patronPosition = getIntent().getIntExtra("patronPosition", -1);
-        if (patronPosition < 0) {
-            Toast.makeText(getBaseContext(), "ADD!", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getBaseContext(), "Editing TBD!", Toast.LENGTH_LONG).show();
-        }
+        Intent intent = new Intent("com.babcsany.templetripplanner.PATRON_RESULT_ACTION");
+        intent.putExtra("patronPosition", patronPosition);
+        final Patron patron = Patron.builder()
+                .name(((TextInputEditText) findViewById(R.id.name_textInput)).getText().toString())
+                .kind(PatronKind.ADULT)
+                .build();
+        intent.putExtra("patron", patron);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

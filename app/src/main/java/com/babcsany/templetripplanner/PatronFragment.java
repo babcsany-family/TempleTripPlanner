@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,12 +14,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddOrEditPatronFragment.OnFragmentInteractionListener} interface
+ * {@link PatronFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddOrEditPatronFragment#newInstance} factory method to
+ * Use the {@link PatronFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddOrEditPatronFragment extends Fragment {
+public class PatronFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +31,7 @@ public class AddOrEditPatronFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public AddOrEditPatronFragment() {
+    public PatronFragment() {
         // Required empty public constructor
     }
 
@@ -39,16 +41,22 @@ public class AddOrEditPatronFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddOrEditPatronFragment.
+     * @return A new instance of fragment PatronFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddOrEditPatronFragment newInstance(String param1, String param2) {
-        AddOrEditPatronFragment fragment = new AddOrEditPatronFragment();
+    public static PatronFragment newInstance(String param1, String param2) {
+        PatronFragment fragment = new PatronFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_patron, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -58,6 +66,7 @@ public class AddOrEditPatronFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override

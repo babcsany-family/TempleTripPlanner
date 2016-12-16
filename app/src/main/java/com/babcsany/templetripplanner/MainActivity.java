@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
     public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
+    public static final int EDIT_PATRON_REQUEST = 1;
+    public static final int ADD_PATRON_REQUEST = 2;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView patronsListView;
 
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         }
 
         patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
-        List<Patron> patronList = new ArrayList<>();
+        final List<Patron> patronList = new ArrayList<>();
         patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
         final Patron.PatronBuilder builder = Patron.builder().name(getString(R.string.patronList_addNewPatron));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -115,10 +117,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         patronsListView.setLayoutManager(layoutManager);
         PatronAdapter patronAdapter = new PatronAdapter(patronList, new PatronAdapter.PatronViewHolder.IPatronClicks() {
             @Override
-            public void onPatronClick(View patronView, int layoutPosition) {
+            public void onPatronClick(View patronView, int adapterPosition) {
                 Intent intent = new Intent(MainActivity.this, PatronActivity.class);
-                intent.putExtra("patronPosition", layoutPosition);
-                startActivity(intent);
+                final int patronAdapterPosition = patronsListView.getChildAdapterPosition(patronView);
+                intent.putExtra("patronPosition", patronAdapterPosition);
+                intent.putExtra("patron", ((PatronAdapter) patronsListView.getAdapter()).get(patronAdapterPosition));
+                startActivityForResult(intent, EDIT_PATRON_REQUEST);
             }
         });
         patronsListView.setAdapter(patronAdapter);
@@ -138,6 +142,23 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(patronsListView);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case ADD_PATRON_REQUEST:
+                if (RESULT_OK == resultCode) {
+                    ((PatronAdapter)patronsListView.getAdapter()).add((Patron) data.getParcelableExtra("patron"));
+                }
+                break;
+            case EDIT_PATRON_REQUEST:
+                if (RESULT_OK == resultCode) {
+                    int patronPosition = data.getIntExtra("patronPosition", -1);
+                    ((PatronAdapter)patronsListView.getAdapter()).set(patronPosition, (Patron) data.getParcelableExtra("patron"));
+                }
+                break;
+        }
     }
 
     @Override
@@ -219,7 +240,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void addNewPatron(MenuItem item) {
         Intent intent = new Intent(this, PatronActivity.class);
-        intent.putExtra("patronPosition", -1);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_PATRON_REQUEST);
     }
 }

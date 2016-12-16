@@ -92,4 +92,13 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
         return patrons.get(position);
     }
 
+    public void set(int position, Patron patron) {
+        patrons.set(position, patron);
+        notifyItemChanged(position);
+    }
+
+    public void add(Patron patron) {
+        patrons.add(patron);
+        notifyDataSetChanged();
+    }
 }
