@@ -51,7 +51,7 @@ public class PatronActivity extends AppCompatActivity {
         final RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup_patronKind);
         final int checkedRadioButtonId = radioGroup.getCheckedRadioButtonId();
         if (-1 == checkedRadioButtonId) {
-            Toast.makeText(this, "Please fill the form properly!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.toast_please_fill_the_form_properly, Toast.LENGTH_LONG).show();
         } else {
             final RadioButton radioButton = (RadioButton) radioGroup.findViewById(checkedRadioButtonId);
             final Patron patron = Patron.builder()

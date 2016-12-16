@@ -13,9 +13,10 @@
     <string name="pref_ringtone_silent">Néma</string>
     <string name="dialog_title_display_name">Név beállítása</string>
     <string name="dialog_content_display_name">Add meg a neved úgy, ahogy az angol nyelvű e-mailek aláírásában használod</string>
-    <string name="patronKind_adult">Felnőtt (legalább 8 éves)</string>
-    <string name="patronKind_child">Gyermek (fiatalabb, mint 8 éves)</string>
+    <string name="patronKind_adult">Felnőtt díj (legalább 8 éves)</string>
+    <string name="patronKind_child">Gyermek díj (fiatalabb, mint 8 éves)</string>
     <string name="patronKind_templeWorker">Templomi munkás</string>
     <string name="patronList_addNewPatron">Új személy hozzáadása...</string>
     <string name="description_addNewPatron">Új személy hozzáadásához kattints ide.</string>
+    <string name="toast_please_fill_the_form_properly">Kérlek, minden adatot adj meg!</string>
 </resources>

@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -61,22 +62,37 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                                 ((Calendar) arrivalDateEdit.getTag()).getTime());
                         String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
                                 ((Calendar) leavingDateEdit.getTag()).getTime());
+                        final int patronsCount = patronsListView.getAdapter().getItemCount();
+                        final String numberOfPersonsString = getResources().getQuantityString(R.plurals.numberOfPersons, patronsCount, patronsCount);
                         emailIntent.putExtra(
                                 Intent.EXTRA_SUBJECT,
                                 String.format(
                                         getString(R.string.subject_reservationEmail),
                                         formattedArrivalDate,
                                         formattedLeavingDate,
-                                        1
+                                        numberOfPersonsString
                                 )
                         );
+                        List<Patron> patrons = ((PatronAdapter) patronsListView.getAdapter()).getPatrons();
+                        final ListIterator<Patron> patronListIterator = patrons.listIterator();
+                        String lines = "";
+                        while (patronListIterator.hasNext()) {
+                            Patron patron = patronListIterator.next();
+                            lines.concat(String.format(
+                                    '\n' + getString(R.string.patronLine),
+                                    patron.getName(),
+                                    getString(patron.getKind().getEmailKind())
+                            ));
+                        }
                         emailIntent.putExtra(
                                 Intent.EXTRA_TEXT,
                                 String.format(
                                         getString(R.string.body_emailReservation),
                                         formattedArrivalDate,
                                         formattedLeavingDate,
-                                        name
+                                        name,
+                                        numberOfPersonsString,
+                                        lines
                                 )
                         );
                         startActivity(Intent.createChooser(emailIntent, "Send email"));

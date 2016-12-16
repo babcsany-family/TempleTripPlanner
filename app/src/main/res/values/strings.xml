@@ -6,8 +6,8 @@
     <string name="hint_leavingDate">Leaving date</string>
     <string name="title_selectLeavingDate">Select Leaving Date</string>
     <string name="email_templeHostel" translatable="false">freib-hos@ldschurch.org</string>
-    <string name="subject_reservationEmail" translatable="false">Reservation from %1$s to %2$s for %3$d persons</string>
-    <string name="body_emailReservation" translatable="false">Dear Hostel,\n\nI would like to reserve for myself from %1$s to %2$s.\n\nKind regards,\n%3$s</string>
+    <string name="subject_reservationEmail" translatable="false">Reservation from %1$s to %2$s for %3$s</string>
+    <string name="body_emailReservation" translatable="false">Dear Hostel,\n\nI would like to reserve for %4$s from %1$s to %2$s.\nHere are the names:\n\n%5$s\n\nKind regards,\n%3$s</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
@@ -21,13 +21,19 @@
     <string name="input_prefill" translatable="false" />
     <string name="dialog_title_display_name">Setup Name</string>
     <string name="dialog_content_display_name">Please enter your name as you would like to use in e-mail signature</string>
-    <string name="patronKind_child">Child (less than 8 years old)</string>
-    <string name="patronKind_adult">Adult (greater than or equal to 8 years old)</string>
+    <string name="patronKind_child">Child price (less than 8 years old)</string>
+    <string name="patronKind_adult">Adult price (greater than or equal to 8 years old)</string>
     <string name="patronKind_templeWorker">Temple worker</string>
     <string name="patronList_addNewPatron">Add new patron...</string>
     <string name="description_addNewPatron">To add new patron please click here.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hint_firstname_lastname">Firstname Lastname</string>
+    <string name="toast_please_fill_the_form_properly">Please fill the form properly!</string>
+    <string name="emailPatronKind_child" translatable="false">(child)</string>
+    <string name="emailPatronKind_adult" translatable="false">(adult or more than 8 years old)</string>
+    <string name="emailPatronKind_templeWorker" translatable="false">(Temple Worker)</string>
+    <string name="patronLine" translatable="false">* %1$s %2$s</string>
+    <plurals name="numberOfPersons">
+        <item quantity="one">one person</item>
+        <item quantity="other">%d persons</item>
+    </plurals>
 </resources>

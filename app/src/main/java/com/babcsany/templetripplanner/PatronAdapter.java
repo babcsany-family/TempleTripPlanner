@@ -101,4 +101,8 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
         patrons.add(patron);
         notifyDataSetChanged();
     }
+
+    public List<Patron> getPatrons() {
+        return patrons;
+    }
 }

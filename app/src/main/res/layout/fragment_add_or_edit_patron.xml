@@ -18,7 +18,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_firstname_lastname"
+            android:hint="@string/input_firstname_lastname_hint"
             android:id="@+id/name_textInput" />
     </android.support.design.widget.TextInputLayout>
 
