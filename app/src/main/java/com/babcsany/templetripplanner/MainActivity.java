@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                         String lines = "";
                         while (patronListIterator.hasNext()) {
                             Patron patron = patronListIterator.next();
-                            lines.concat(String.format(
+                            lines = lines.concat(String.format(
                                     '\n' + getString(R.string.patronLine),
                                     patron.getName(),
                                     getString(patron.getKind().getEmailKind())

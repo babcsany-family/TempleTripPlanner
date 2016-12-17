@@ -7,7 +7,7 @@
     <string name="title_selectLeavingDate">Select Leaving Date</string>
     <string name="email_templeHostel" translatable="false">freib-hos@ldschurch.org</string>
     <string name="subject_reservationEmail" translatable="false">Reservation from %1$s to %2$s for %3$s</string>
-    <string name="body_emailReservation" translatable="false">Dear Hostel,\n\nI would like to reserve for %4$s from %1$s to %2$s.\nHere are the names:\n\n%5$s\n\nKind regards,\n%3$s</string>
+    <string name="body_emailReservation" translatable="false">Dear Hostel,\n\nI would like to reserve for %4$s from %1$s to %2$s.\nHere are the names:\n%5$s\n\nKind regards,\n%3$s</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
