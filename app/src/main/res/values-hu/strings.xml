@@ -19,4 +19,9 @@
     <string name="patronList_addNewPatron">Új személy hozzáadása...</string>
     <string name="description_addNewPatron">Új személy hozzáadásához kattints ide.</string>
     <string name="toast_please_fill_the_form_properly">Kérlek, minden adatot adj meg!</string>
+    <string name="trip_nights_cost_prepay_text">%1$s: %2$6.2f€\n(%3$6.2f€ foglaló)</string>
+    <plurals name="numberOfNights">
+        <item quantity="one">%d éjszaka</item>
+        <item quantity="other">%d éjszaka</item>
+    </plurals>
 </resources>

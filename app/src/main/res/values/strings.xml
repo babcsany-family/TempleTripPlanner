@@ -32,8 +32,13 @@
     <string name="emailPatronKind_adult" translatable="false">(adult or more than 8 years old)</string>
     <string name="emailPatronKind_templeWorker" translatable="false">(Temple Worker)</string>
     <string name="patronLine" translatable="false">* %1$s %2$s</string>
+    <string name="trip_nights_cost_prepay_text">%1$s: %2$6.2f€\n(%3$6.2f€ for reservation)</string>
     <plurals name="numberOfPersons">
         <item quantity="one">one person</item>
         <item quantity="other">%d persons</item>
+    </plurals>
+    <plurals name="numberOfNights">
+        <item quantity="one">%d night</item>
+        <item quantity="other">%d nights</item>
     </plurals>
 </resources>

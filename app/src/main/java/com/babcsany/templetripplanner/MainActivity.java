@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -39,6 +41,20 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public static final int ADD_PATRON_REQUEST = 2;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView patronsListView;
+    private ITempleHostelPricingCalculator selectedTemple = new FreibergTemplePricingCalculator();
+
+    private class FreibergTemplePricingCalculator implements ITempleHostelPricingCalculator {
+        @Override
+        public double calculatePatronHostelFee(Patron patron, long days) {
+            return (patron.getKind().equals(PatronKind.CHILD) ? days * 1.5 : days < 3 ? days * 6 : days * 4);
+        }
+
+        @Override
+        public double getReservationFeePercentage() {
+            return 0.2d;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +169,14 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(patronsListView);
+        final TextView costText = (TextView) findViewById(R.id.costOfHostel);
+
+        costText.setText(getString(
+                R.string.trip_nights_cost_prepay_text,
+                getResources().getQuantityString(R.plurals.numberOfNights, 0, 0),
+                0.0,
+                0.0
+        ));
     }
 
     @Override
@@ -170,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 }
                 break;
         }
+        calculateCost();
     }
 
     @Override
@@ -220,6 +245,27 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         String format = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
         dateEditTextView.setTag(calendar);
         dateEditTextView.setText(format);
+        calculateCost();
+    }
+
+    private void calculateCost() {
+        Calendar arrival = (Calendar) findViewById(R.id.editTextArrivalDate).getTag();
+        Calendar leave = (Calendar) findViewById(R.id.editTextLeavingDate).getTag();
+        if (arrival != null && leave != null) {
+            long tripDuration = leave.getTimeInMillis() - arrival.getTimeInMillis();
+            final long tripDays = TimeUnit.DAYS.convert(tripDuration, TimeUnit.MILLISECONDS);
+            PatronAdapter adapter = (PatronAdapter) patronsListView.getAdapter();
+            double cost = 0.0d;
+            final List<Patron> patrons = adapter.getPatrons();
+            for (Patron patron : patrons) {
+                cost += selectedTemple.calculatePatronHostelFee(patron, tripDays);
+            }
+            final TextView costTextView = (TextView) findViewById(R.id.costOfHostel);
+            costTextView.setText(getString(R.string.trip_nights_cost_prepay_text,
+                    getResources().getQuantityString(R.plurals.numberOfNights, new Long(tripDays).intValue(), tripDays),
+                    cost,
+                    cost * selectedTemple.getReservationFeePercentage()));
+        }
     }
 
     public void selectLeavingDate(View view) {
