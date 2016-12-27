@@ -1,0 +1,20 @@
+<!--
+  Generated template for the TempleTripForm component.
+
+  See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
+  for more info on Angular 2 Components.
+-->
+
+<form [formGroup]="templeTripGroup" (ngSubmit)="submitTrip()">
+  <ion-item>
+    <ion-label floating ng2-translate>templeTrip.arrivalDate</ion-label>
+    <ion-input type="text" formControlName="arrivalDate"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label floating ng2-translate>templeTrip.leaveDate</ion-label>
+    <ion-input type="text" formControlName="leaveDate"></ion-input>
+  </ion-item>
+  <ion-item>
+    <button ion-button color="secondary" (click)="pickDate()">Date Picker Calendar</button>
+  </ion-item>
+</form>

@@ -1,0 +1,20 @@
+page-page1 {
+  .temple-picture-overlay {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+
+    ion-row {
+      flex-grow: 2;
+    }
+
+    ion-card-title {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.5rem;
+      color: white;
+      margin-bottom: 0;
+      order: 99;
+    }
+  }
+}
