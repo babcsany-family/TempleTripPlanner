@@ -7,12 +7,17 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>createTempleTrip</ion-title>
+    <ion-title ng2-translate>createTempleTrip.title</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <temple-trip-form></temple-trip-form>
+  <temple-trip-form #templeTrip></temple-trip-form>
+  <ion-fab bottom right>
+    <button ion-fab icon-only (click)="submitTrip()" [disabled]="!templeTrip.templeTripGroup.valid">
+      <ion-icon name="mail" large></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>

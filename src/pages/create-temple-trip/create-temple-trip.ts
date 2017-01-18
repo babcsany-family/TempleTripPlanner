@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from "@angular/core";
+import { NavController, NavParams } from "ionic-angular";
+import { TempleTripFormComponent } from "../../components/temple-trip-form/temple-trip-form";
 
 /*
   Generated class for the CreateTempleTrip page.
@@ -13,10 +14,15 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class CreateTempleTripPage {
 
+  @ViewChild('templeTrip') templeTrip: TempleTripFormComponent;
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CreateTempleTripPage');
   }
 
+  submitTrip() {
+    this.templeTrip.submitTrip();
+  }
 }

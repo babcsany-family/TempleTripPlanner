@@ -1,11 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, SQLite } from 'ionic-native';
 
 import { Page1 } from '../pages/page1/page1';
 import { Page2 } from '../pages/page2/page2';
 import {TranslateService} from "ng2-translate";
 import { CreateTempleTripPage } from "../pages/create-temple-trip/create-temple-trip";
+import { DataStorage } from "../providers/data-storage";
 
 
 @Component({
@@ -20,7 +21,8 @@ export class MyApp {
 
   constructor(
     public platform: Platform,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private db: DataStorage
   ) {
     this.initializeApp();
 
@@ -36,10 +38,11 @@ export class MyApp {
     this.platform.ready().then(() => {
       this.translate.setDefaultLang('en');
       this.translate.use(this.translate.getBrowserLang());
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
-      Splashscreen.hide();
+      this.db.openDb().then(() => {
+        this.db.init();
+        StatusBar.styleDefault();
+        Splashscreen.hide();
+      });
     });
   }
 

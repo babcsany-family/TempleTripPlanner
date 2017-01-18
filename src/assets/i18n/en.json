@@ -1,5 +1,12 @@
 {
   "app": {
     "title": "Temple Trip Planner"
+  },
+  "createTempleTrip": {
+    "title": "New Temple Trip"
+  },
+  "templeTrip": {
+    "label_arrivalDate": "Arrival date",
+    "label_leaveDate": "Leave date"
   }
 }

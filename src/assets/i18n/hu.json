@@ -1,5 +1,12 @@
 {
   "app": {
     "title": "Templomi út tervező"
+  },
+  "createTempleTrip": {
+    "title": "Új templomi út"
+  },
+  "templeTrip": {
+    "label_arrivalDate": "Érkezés dátuma",
+    "label_leaveDate": "Hazaindulás dátuma"
   }
 }

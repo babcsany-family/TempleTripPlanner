@@ -7,14 +7,22 @@
 
 <form [formGroup]="templeTripGroup" (ngSubmit)="submitTrip()">
   <ion-item>
-    <ion-label floating ng2-translate>templeTrip.arrivalDate</ion-label>
-    <ion-input type="text" formControlName="arrivalDate"></ion-input>
+    <ion-label floating ng2-translate>templeTrip.label_arrivalDate</ion-label>
+    <ion-input type="date" formControlName="arrivalDate" (focus)="pickDate('arrivalDate')"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label floating ng2-translate>templeTrip.leaveDate</ion-label>
-    <ion-input type="text" formControlName="leaveDate"></ion-input>
+    <ion-label floating ng2-translate>templeTrip.label_leaveDate</ion-label>
+    <ion-input type="date" formControlName="leaveDate"></ion-input>
   </ion-item>
-  <ion-item>
-    <button ion-button color="secondary" (click)="pickDate()">Date Picker Calendar</button>
-  </ion-item>
+  <ion-list>
+    <ion-card *ngFor="let patron of patrons">
+      <ion-item>
+        <ion-avatar item-left round>
+          <img [src]="patron.picture"/>
+        </ion-avatar>
+        <ion-card-title no-padding>{{patron.name}}</ion-card-title>
+        <p>{{patron.patronKindForHostel}}</p>
+      </ion-item>
+    </ion-card>
+  </ion-list>
 </form>
