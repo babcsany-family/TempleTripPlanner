@@ -52,7 +52,7 @@ export class TempleTripFormComponent implements OnInit{
 
   ionViewDidLoad() {
     console.log('SOMETHING from ionViewDidLoad')
-    this.db.fetchName().then((name: string) => this.name = name);
+    // this.db.fetchName().then((name: string) => this.name = name);
   }
 
   pickDate(datePickedFor: string) {

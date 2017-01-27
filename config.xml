@@ -56,4 +56,5 @@
   <plugin name="cordova-plugin-splashscreen" spec="~4.0.1"/>
   <icon src="resources\android\icon\drawable-xhdpi-icon.png"/>
   <allow-navigation href="http://192.168.214.162:8100"/>
+  <allow-navigation href="http://169.254.80.80:8100"/>
 </widget>
