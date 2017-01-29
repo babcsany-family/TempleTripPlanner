@@ -3,7 +3,6 @@ package com.babcsany.templetripplanner;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -16,11 +15,8 @@ import android.text.InputType;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -64,110 +60,18 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditText arrivalDateEdit = (EditText) findViewById(R.id.editTextArrivalDate);
-                EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
-                if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                    String name = preferences.getString(NAME_IN_EMAIL_SIGNATURE, null);
-                    if (null != name) {
-                        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
-                        String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                                ((Calendar) arrivalDateEdit.getTag()).getTime());
-                        String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                                ((Calendar) leavingDateEdit.getTag()).getTime());
-                        final int patronsCount = patronsListView.getAdapter().getItemCount();
-                        final String numberOfPersonsString = getResources().getQuantityString(R.plurals.numberOfPersons, patronsCount, patronsCount);
-                        emailIntent.putExtra(
-                                Intent.EXTRA_SUBJECT,
-                                String.format(
-                                        getString(R.string.subject_reservationEmail),
-                                        formattedArrivalDate,
-                                        formattedLeavingDate,
-                                        numberOfPersonsString
-                                )
-                        );
-                        List<Patron> patrons = ((PatronAdapter) patronsListView.getAdapter()).getPatrons();
-                        final ListIterator<Patron> patronListIterator = patrons.listIterator();
-                        String lines = "";
-                        while (patronListIterator.hasNext()) {
-                            Patron patron = patronListIterator.next();
-                            lines = lines.concat(String.format(
-                                    '\n' + getString(R.string.patronLine),
-                                    patron.getName(),
-                                    getString(patron.getKind().getEmailKind())
-                            ));
-                        }
-                        emailIntent.putExtra(
-                                Intent.EXTRA_TEXT,
-                                String.format(
-                                        getString(R.string.body_emailReservation),
-                                        formattedArrivalDate,
-                                        formattedLeavingDate,
-                                        name,
-                                        numberOfPersonsString,
-                                        lines
-                                )
-                        );
-                        startActivity(Intent.createChooser(emailIntent, "Send email"));
-                    } else {
-                        showSettings(null);
-                    }
-                }
-            }
-        });
+        fab.setOnClickListener(new SendEmailToTempleHostelButtonOnClickListener());
 
-        String name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
-        if (null == name || "".compareTo(name.trim()) == 0) {
-            new MaterialDialog.Builder(this)
-                    .title(R.string.dialog_title_display_name)
-                    .content(R.string.dialog_content_display_name)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input(R.string.input_firstname_lastname_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString(NAME_IN_EMAIL_SIGNATURE, input.toString());
-                            editor.commit();
-                        }
-                    }).show();
-            name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
-        }
+        String name = getNameInEmailSignature();
 
         patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
         final List<Patron> patronList = new ArrayList<>();
         patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
         layoutManager = new LinearLayoutManager(this);
         patronsListView.setLayoutManager(layoutManager);
-        PatronAdapter patronAdapter = new PatronAdapter(patronList, new PatronAdapter.PatronViewHolder.IPatronClicks() {
-            @Override
-            public void onPatronClick(View patronView, int adapterPosition) {
-                Intent intent = new Intent(MainActivity.this, PatronActivity.class);
-                final int patronAdapterPosition = patronsListView.getChildAdapterPosition(patronView);
-                intent.putExtra("patronPosition", patronAdapterPosition);
-                intent.putExtra("patron", ((PatronAdapter) patronsListView.getAdapter()).get(patronAdapterPosition));
-                startActivityForResult(intent, EDIT_PATRON_REQUEST);
-            }
-        });
-        patronsListView.setAdapter(patronAdapter);
+        patronsListView.setAdapter(new PatronAdapter(patronList, new PatronClicks()));
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-                PatronAdapter adapter = (PatronAdapter) patronsListView.getAdapter();
-                adapter.remove(swipedPosition);
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new PatronTouchSimpleCallback());
         itemTouchHelper.attachToRecyclerView(patronsListView);
         final TextView costText = (TextView) findViewById(R.id.costOfHostel);
 
@@ -177,6 +81,33 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 0.0,
                 0.0
         ));
+    }
+
+    private String getNameInEmailSignature() {
+        String name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
+        if (null == name || "".compareTo(name.trim()) == 0) {
+            name = getNameFromUser();
+        }
+        return name;
+    }
+
+    private String getNameFromUser() {
+        String name;
+        new MaterialDialog.Builder(this)
+                .title(R.string.dialog_title_display_name)
+                .content(R.string.dialog_content_display_name)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(R.string.input_firstname_lastname_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(NAME_IN_EMAIL_SIGNATURE, input.toString());
+                        editor.commit();
+                    }
+                }).show();
+        name = PreferenceManager.getDefaultSharedPreferences(this).getString(NAME_IN_EMAIL_SIGNATURE, null);
+        return name;
     }
 
     @Override
@@ -298,5 +229,89 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void addNewPatron(MenuItem item) {
         Intent intent = new Intent(this, PatronActivity.class);
         startActivityForResult(intent, ADD_PATRON_REQUEST);
+    }
+
+    private class SendEmailToTempleHostelButtonOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            EditText arrivalDateEdit = (EditText) findViewById(R.id.editTextArrivalDate);
+            EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
+            if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                String name = preferences.getString(NAME_IN_EMAIL_SIGNATURE, null);
+                if (null != name) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
+                    String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                            ((Calendar) arrivalDateEdit.getTag()).getTime());
+                    String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                            ((Calendar) leavingDateEdit.getTag()).getTime());
+                    final int patronsCount = patronsListView.getAdapter().getItemCount();
+                    final String numberOfPersonsString = getResources().getQuantityString(R.plurals.numberOfPersons, patronsCount, patronsCount);
+                    emailIntent.putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            String.format(
+                                    getString(R.string.subject_reservationEmail),
+                                    formattedArrivalDate,
+                                    formattedLeavingDate,
+                                    numberOfPersonsString
+                            )
+                    );
+                    List<Patron> patrons = ((PatronAdapter) patronsListView.getAdapter()).getPatrons();
+                    final ListIterator<Patron> patronListIterator = patrons.listIterator();
+                    String lines = "";
+                    while (patronListIterator.hasNext()) {
+                        Patron patron = patronListIterator.next();
+                        lines = lines.concat(String.format(
+                                '\n' + getString(R.string.patronLine),
+                                patron.getName(),
+                                getString(patron.getKind().getEmailKind())
+                        ));
+                    }
+                    emailIntent.putExtra(
+                            Intent.EXTRA_TEXT,
+                            String.format(
+                                    getString(R.string.body_emailReservation),
+                                    formattedArrivalDate,
+                                    formattedLeavingDate,
+                                    name,
+                                    numberOfPersonsString,
+                                    lines
+                            )
+                    );
+                    startActivity(Intent.createChooser(emailIntent, "Send email"));
+                } else {
+                    showSettings(null);
+                }
+            }
+        }
+    }
+
+    private class PatronClicks implements PatronAdapter.PatronViewHolder.IPatronClicks {
+        @Override
+        public void onPatronClick(View patronView, int adapterPosition) {
+            Intent intent = new Intent(MainActivity.this, PatronActivity.class);
+            final int patronAdapterPosition = patronsListView.getChildAdapterPosition(patronView);
+            intent.putExtra("patronPosition", patronAdapterPosition);
+            intent.putExtra("patron", ((PatronAdapter) patronsListView.getAdapter()).get(patronAdapterPosition));
+            startActivityForResult(intent, EDIT_PATRON_REQUEST);
+        }
+    }
+
+    private class PatronTouchSimpleCallback extends ItemTouchHelper.SimpleCallback {
+        public PatronTouchSimpleCallback() {
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            int swipedPosition = viewHolder.getAdapterPosition();
+            PatronAdapter adapter = (PatronAdapter) patronsListView.getAdapter();
+            adapter.remove(swipedPosition);
+        }
     }
 }
