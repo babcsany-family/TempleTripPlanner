@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import org.parceler.Parcels;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -66,7 +67,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
         final List<Patron> patronList = new ArrayList<>();
-        patronList.add(Patron.builder().kind(PatronKind.ADULT).name(name).build());
+        Patron patron = new Patron();
+        patron.setKind(PatronKind.ADULT);
+        patron.setName(name);
+        patronList.add(patron);
         layoutManager = new LinearLayoutManager(this);
         patronsListView.setLayoutManager(layoutManager);
         patronsListView.setAdapter(new PatronAdapter(patronList, new PatronClicks()));
@@ -292,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             Intent intent = new Intent(MainActivity.this, PatronActivity.class);
             final int patronAdapterPosition = patronsListView.getChildAdapterPosition(patronView);
             intent.putExtra("patronPosition", patronAdapterPosition);
-            intent.putExtra("patron", ((PatronAdapter) patronsListView.getAdapter()).get(patronAdapterPosition));
+            intent.putExtra("patron", Parcels.wrap(((PatronAdapter) patronsListView.getAdapter()).get(patronAdapterPosition)));
             startActivityForResult(intent, EDIT_PATRON_REQUEST);
         }
     }

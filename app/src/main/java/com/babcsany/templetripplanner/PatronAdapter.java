@@ -71,7 +71,7 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
     @Override
     public void onBindViewHolder(PatronViewHolder holder, int position) {
         Patron patron = patrons.get(position);
-        holder.picture.setImageDrawable(patron.getPicture());
+//        holder.picture.setImageDrawable(patron.getPicture());
         holder.name.setText(patron.getName());
         if (null != patron.getKind()) {
             holder.kind.setText(patron.getKind().getResourceId());

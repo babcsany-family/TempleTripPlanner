@@ -1,59 +1,76 @@
 package com.babcsany.templetripplanner;
 
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.v7.widget.RecyclerView;
+import android.provider.ContactsContract;
 
-import java.io.Serializable;
+import java.util.List;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.parceler.Parcel;
+import org.parceler.ParcelConstructor;
+import org.parceler.Transient;
 
 /**
  * Created by peter on 2016. 12. 13..
  */
-@NoArgsConstructor
-@Builder
-@Data
-public class Patron implements Parcelable {
-    private String name;
-    private PatronKind kind;
-    private Drawable picture;
-
-    protected Patron(Parcel in) {
-        name = in.readString();
-        kind = PatronKind.valueOf(in.readString());
-        picture = null;
+@Parcel
+public class Patron {
+    public String getName() {
+        return name;
     }
 
-    public Patron(String patronName, PatronKind patronKind, Drawable patronPicture) {
-        name = patronName;
-        kind = patronKind;
-        picture = patronPicture;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public static final Creator<Patron> CREATOR = new Creator<Patron>() {
-        @Override
-        public Patron createFromParcel(Parcel in) {
-            return new Patron(in);
-        }
-
-        @Override
-        public Patron[] newArray(int size) {
-            return new Patron[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public PatronKind getKind() {
+        return kind;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(kind.name());
+    public void setKind(PatronKind kind) {
+        this.kind = kind;
     }
+
+/*
+    public Drawable getPicture() {
+        return picture;
+    }
+
+    public void setPicture(Drawable picture) {
+        this.picture = picture;
+    }
+*/
+
+    public String getWardOrBranch() {
+        return wardOrBranch;
+    }
+
+    public void setWardOrBranch(String wardOrBranch) {
+        this.wardOrBranch = wardOrBranch;
+    }
+
+    public List<String> getSpokenLanguages() {
+        return spokenLanguages;
+    }
+
+    public void setSpokenLanguages(List<String> spokenLanguages) {
+        this.spokenLanguages = spokenLanguages;
+    }
+
+/*
+    public ContactsContract.CommonDataKinds.Phone getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(ContactsContract.CommonDataKinds.Phone phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+*/
+
+    String name;
+    PatronKind kind;
+//    Drawable picture;
+    String wardOrBranch;
+    List<String> spokenLanguages;
+//    ContactsContract.CommonDataKinds.Phone phoneNumber;
 }
