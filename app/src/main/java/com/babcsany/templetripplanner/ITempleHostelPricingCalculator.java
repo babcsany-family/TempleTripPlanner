@@ -1,7 +1,5 @@
 package com.babcsany.templetripplanner;
 
-import lombok.Data;
-
 /**
  * Created by peter on 2016. 12. 21..
  */

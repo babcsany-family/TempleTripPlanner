@@ -1,21 +1,13 @@
 package com.babcsany.templetripplanner;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * Created by peter on 2016. 12. 12..

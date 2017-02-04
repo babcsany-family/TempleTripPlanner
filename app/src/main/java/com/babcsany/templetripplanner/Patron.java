@@ -1,14 +1,8 @@
 package com.babcsany.templetripplanner;
 
-import android.graphics.drawable.Drawable;
-import android.provider.ContactsContract;
+import org.parceler.Parcel;
 
 import java.util.List;
-
-import lombok.*;
-import org.parceler.Parcel;
-import org.parceler.ParcelConstructor;
-import org.parceler.Transient;
 
 /**
  * Created by peter on 2016. 12. 13..
