@@ -18,7 +18,6 @@
             android:layout_alignParentTop="true"
             android:id="@+id/editTextArrivalDate"
             android:hint="@string/arrival_date"
-            android:onClick="selectArrivalDate"
             android:layout_centerHorizontal="false"
             android:layout_alignParentLeft="true"
             android:minEms="5"
@@ -49,7 +48,6 @@
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textViewDash"
             android:hint="@string/hint_leavingDate"
-            android:onClick="selectLeavingDate"
             android:focusable="false"/>
 
     <TextView
