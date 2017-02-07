@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,28 +6,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.babcsany.templetripplanner.R;
+import com.babcsany.templetripplanner.parcels.Patron;
 
 import java.util.List;
 
 /**
- * Created by peter on 2016. 12. 12..
+ * Patron list adapter which can be used in RecyclerView
  */
-
 public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronViewHolder> {
     private final List<Patron> patrons;
-    private PatronViewHolder.IPatronClicks listeners;
+    private IPatronClicks listeners;
 
-    public static class PatronViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView picture;
-        public TextView name;
-        public TextView kind;
-        public IPatronClicks listeners;
+    public interface IPatronClicks {
+        void onPatronClick(View patronView, int layoutPosition);
+    }
 
-        public PatronViewHolder(View view, IPatronClicks patronClickListeners) {
+    static class PatronViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.patronImage) ImageView picture;
+        @BindView(R.id.patronName) TextView name;
+        @BindView(R.id.patronKind) TextView kind;
+        IPatronClicks listeners;
+
+        PatronViewHolder(View view, IPatronClicks patronClickListeners) {
             super(view);
-            picture = (ImageView) view.findViewById(R.id.patronImage);
-            name = (TextView) view.findViewById(R.id.patronName);
-            kind = (TextView) view.findViewById(R.id.patronKind);
+            ButterKnife.bind(this, view);
             listeners = patronClickListeners;
             view.setOnClickListener(this);
         }
@@ -39,17 +44,13 @@ public class PatronAdapter extends RecyclerView.Adapter<PatronAdapter.PatronView
             }
         }
 
-        public static interface IPatronClicks {
-            public void onPatronClick(View patronView, int layoutPosition);
-        }
-
     }
 
     public PatronAdapter(List<Patron> patrons) {
         this.patrons = patrons;
     }
 
-    public PatronAdapter(List<Patron> patrons, PatronViewHolder.IPatronClicks patronClicksListeners) {
+    public PatronAdapter(List<Patron> patrons, IPatronClicks patronClicksListeners) {
         this.patrons = patrons;
         this.listeners = patronClicksListeners;
     }

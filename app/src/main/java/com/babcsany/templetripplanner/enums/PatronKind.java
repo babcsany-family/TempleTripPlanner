@@ -1,7 +1,11 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.enums;
+
+import com.babcsany.templetripplanner.R;
 
 /**
- * Created by peter on 2016. 12. 13..
+ * The type of the patron.
+ *
+ * There are 3 types of patrons in the Hostel: CHILD, ADULT, TEMPLE_WORKER
  */
 public enum PatronKind {
     CHILD(R.string.patronKind_child, R.string.emailPatronKind_child),
@@ -26,9 +30,9 @@ public enum PatronKind {
 
     public static PatronKind getByResourceId(int resourceId) {
         final PatronKind[] patronKinds = PatronKind.values();
-        for (int i = 0; i < patronKinds.length; i++) {
-            if (patronKinds[i].getResourceId() == resourceId) {
-                return patronKinds[i];
+        for (PatronKind patronKind : patronKinds) {
+            if (patronKind.getResourceId() == resourceId) {
+                return patronKind;
             }
         }
         return null;

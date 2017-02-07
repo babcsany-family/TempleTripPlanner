@@ -1,12 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.babcsany.templetripplanner.MainActivity">
+    tools:context="com.babcsany.templetripplanner.activities.MainActivity">
     <item
         android:title="@string/patronList_addNewPatron"
         android:orderInCategory="100"
         android:icon="@drawable/ic_add_white_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:id="@+id/addNewPatronMenuItem"
         android:onClick="addNewPatron" />
     <item

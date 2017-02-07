@@ -33,6 +33,7 @@
     <string name="emailPatronKind_templeWorker" translatable="false">(Temple Worker)</string>
     <string name="patronLine" translatable="false">* %1$s %2$s</string>
     <string name="trip_nights_cost_prepay_text">%1$s: %2$6.2f€\n(%3$6.2f€ for reservation)</string>
+    <string name="dash">-</string>
     <plurals name="numberOfPersons">
         <item quantity="one">one person</item>
         <item quantity="other">%d persons</item>

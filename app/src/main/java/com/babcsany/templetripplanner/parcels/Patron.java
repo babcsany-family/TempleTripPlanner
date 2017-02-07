@@ -1,11 +1,12 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.parcels;
 
+import com.babcsany.templetripplanner.enums.PatronKind;
 import org.parceler.Parcel;
 
 import java.util.List;
 
 /**
- * Created by peter on 2016. 12. 13..
+ * Parcel class to pass patron information between activities.
  */
 @Parcel
 public class Patron {

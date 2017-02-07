@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.activities;
 
 
 import android.annotation.TargetApi;
@@ -20,8 +20,7 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
-
-import java.util.List;
+import com.babcsany.templetripplanner.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

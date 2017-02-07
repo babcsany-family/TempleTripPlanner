@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
         getDelegate().onPostCreate(savedInstanceState);
     }
 
-    public ActionBar getSupportActionBar() {
+    ActionBar getSupportActionBar() {
         return getDelegate().getSupportActionBar();
     }
 

@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.babcsany.templetripplanner.R;
+import com.babcsany.templetripplanner.parcels.Patron;
 
 
 /**

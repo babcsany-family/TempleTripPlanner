@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -22,6 +22,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.babcsany.templetripplanner.interfaces.ITempleHostelPricingCalculator;
+import com.babcsany.templetripplanner.adapters.PatronAdapter;
+import com.babcsany.templetripplanner.R;
+import com.babcsany.templetripplanner.activities.PatronActivity;
+import com.babcsany.templetripplanner.enums.PatronKind;
+import com.babcsany.templetripplanner.parcels.Patron;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.parceler.Parcels;
 
@@ -38,9 +44,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class MainActivityFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    public static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
-    public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
-    public static final int EDIT_PATRON_REQUEST = 1;
+    private static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
+    private static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
+    private static final int EDIT_PATRON_REQUEST = 1;
 
     @BindView(R.id.editTextArrivalDate) EditText editTextArrivalDate;
     @BindView(R.id.textViewDash) TextView textViewDash;
@@ -89,7 +95,7 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
         unbinder.unbind();
     }
 
-    public ITempleHostelPricingCalculator getTempleHostelPricingCalculator() {
+    private ITempleHostelPricingCalculator getTempleHostelPricingCalculator() {
         return templeHostelPricingCalculator;
     }
 
@@ -190,14 +196,14 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivityFragment.this.getActivity());
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(NAME_IN_EMAIL_SIGNATURE, input.toString());
-                        editor.commit();
+                        editor.apply();
                     }
                 }).show();
         name = PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getString(NAME_IN_EMAIL_SIGNATURE, null);
         return name;
     }
 
-    public void updateTripCost(ITempleHostelPricingCalculator selectedTemple) {
+    private void updateTripCost(ITempleHostelPricingCalculator selectedTemple) {
         long tripDays = getTripDays();
         double cost = calculateTripCost(
                 selectedTemple,
@@ -206,7 +212,7 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
         );
 
         costOfHostel.setText(getString(R.string.trip_nights_cost_prepay_text,
-                getResources().getQuantityString(R.plurals.numberOfNights, new Long(tripDays).intValue(), tripDays),
+                getResources().getQuantityString(R.plurals.numberOfNights, Long.valueOf(tripDays).intValue(), tripDays),
                 cost,
                 cost * selectedTemple.getReservationFeePercentage()));
     }
@@ -224,7 +230,7 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
         return cost;
     }
 
-    private class PatronClicks implements PatronAdapter.PatronViewHolder.IPatronClicks {
+    private class PatronClicks implements PatronAdapter.IPatronClicks {
         @Override
         public void onPatronClick(View patronView, int adapterPosition) {
             Intent intent = new Intent(MainActivityFragment.this.getActivity(), PatronActivity.class);
@@ -236,7 +242,7 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
     }
 
     private class PatronTouchSimpleCallback extends ItemTouchHelper.SimpleCallback {
-        public PatronTouchSimpleCallback() {
+        PatronTouchSimpleCallback() {
             super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
 

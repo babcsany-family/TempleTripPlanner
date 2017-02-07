@@ -1,9 +1,10 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.interfaces;
+
+import com.babcsany.templetripplanner.parcels.Patron;
 
 /**
- * Created by peter on 2016. 12. 21..
+ * Interface to calculate Temple Hostel Pricing
  */
-
 public interface ITempleHostelPricingCalculator {
     double calculatePatronHostelFee(Patron patron, long days);
     double getReservationFeePercentage();

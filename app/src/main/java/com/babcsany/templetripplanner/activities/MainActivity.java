@@ -1,11 +1,10 @@
-package com.babcsany.templetripplanner;
+package com.babcsany.templetripplanner.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,22 +13,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.babcsany.templetripplanner.interfaces.ITempleHostelPricingCalculator;
+import com.babcsany.templetripplanner.adapters.PatronAdapter;
+import com.babcsany.templetripplanner.R;
+import com.babcsany.templetripplanner.enums.PatronKind;
+import com.babcsany.templetripplanner.parcels.Patron;
 import org.parceler.Parcels;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
-    public static final int ADD_PATRON_REQUEST = 2;
+    private static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
+    private static final int ADD_PATRON_REQUEST = 2;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 //    @BindView(R.id.fragment) MainActivityFragment fragment;
