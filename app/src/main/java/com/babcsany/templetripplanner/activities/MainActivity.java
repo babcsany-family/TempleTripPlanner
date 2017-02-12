@@ -1,50 +1,45 @@
 package com.babcsany.templetripplanner.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.babcsany.templetripplanner.R;
-import com.babcsany.templetripplanner.adapters.PatronAdapter;
 import com.babcsany.templetripplanner.enums.PatronKind;
+import com.babcsany.templetripplanner.fragments.MainActivityFragment;
+import com.babcsany.templetripplanner.fragments.TempleTripFragment;
+import com.babcsany.templetripplanner.fragments.dummy.DummyContent;
 import com.babcsany.templetripplanner.interfaces.ITempleHostelPricingCalculator;
 import com.babcsany.templetripplanner.parcels.Patron;
-import org.parceler.Parcels;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ListIterator;
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    private static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
-    private static final int ADD_PATRON_REQUEST = 2;
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, TempleTripFragment.OnListFragmentInteractionListener {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     //    @BindView(R.id.fragment) MainActivityFragment fragment;
-    @BindView(R.id.fab) FloatingActionButton fab;
+//    @BindView(R.id.fab_add) FloatingActionButton fabAdd;
     @BindView(R.id.nav_view) NavigationView navigationView;
     @BindView(R.id.drawer_layout) DrawerLayout drawer;
+    Fragment fragment;
 
-    private RecyclerView patronsListView;
+//    private RecyclerView patronsListView;
     private ITempleHostelPricingCalculator selectedTemple = new FreibergTemplePricingCalculator();
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        System.out.println("Called!");
+    }
 
     private class FreibergTemplePricingCalculator implements ITempleHostelPricingCalculator {
         @Override
@@ -58,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,16 +60,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        if (savedInstanceState != null) {
+            return;
+        }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragment = new MainActivityFragment();
+        fragmentTransaction.add(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        patronsListView = (RecyclerView) findViewById(R.id.patronsListView);
-//        fragment.setTempleHostelPricingCalculator(selectedTemple);
     }
 
     @Override
@@ -85,19 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case ADD_PATRON_REQUEST:
-                if (RESULT_OK == resultCode) {
-                    ((PatronAdapter) patronsListView.getAdapter())
-                            .add(Parcels.<Patron>unwrap(data.getParcelableExtra("patron")));
-                }
-                break;
-        }
-//        fragment.updateTripCost(selectedTemple);
     }
 
     @Override
@@ -117,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (fragment != null && fragment.onOptionsItemSelected(item)) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -127,27 +117,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    public void addNewPatron(MenuItem item) {
-        Intent intent = new Intent(this, PatronActivity.class);
-        startActivityForResult(intent, ADD_PATRON_REQUEST);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.my_trips) {
-            // Handle the camera action
-        } else if (id == R.id.find_seats) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        int id;
+        switch (id = item.getItemId()) {
+            case R.id.my_trips:
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragment = new TempleTripFragment();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
+                break;
+            case R.id.find_seats:
+            case R.id.nav_manage:
+            case R.id.nav_share:
+            case R.id.nav_send:
+                Toast.makeText(this, "Not implemented yet!", Toast.LENGTH_SHORT).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -155,56 +140,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @OnClick(R.id.fab)
-    public void onSendEmailToTempleHostelButtonClick(View view) {
-        EditText arrivalDateEdit = (EditText) findViewById(R.id.editTextArrivalDate);
-        EditText leavingDateEdit = (EditText) findViewById(R.id.editTextLeavingDate);
-        if (arrivalDateEdit.getTag() instanceof Calendar && leavingDateEdit.getTag() instanceof Calendar) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            String name = preferences.getString(NAME_IN_EMAIL_SIGNATURE, null);
-            if (null != name) {
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
-                String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                        ((Calendar) arrivalDateEdit.getTag()).getTime());
-                String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
-                        ((Calendar) leavingDateEdit.getTag()).getTime());
-                final int patronsCount = patronsListView.getAdapter().getItemCount();
-                final String numberOfPersonsString = getResources().getQuantityString(R.plurals.numberOfPersons, patronsCount, patronsCount);
-                emailIntent.putExtra(
-                        Intent.EXTRA_SUBJECT,
-                        String.format(
-                                getString(R.string.subject_reservationEmail),
-                                formattedArrivalDate,
-                                formattedLeavingDate,
-                                numberOfPersonsString
-                        )
-                );
-                List<Patron> patrons = ((PatronAdapter) patronsListView.getAdapter()).getPatrons();
-                final ListIterator<Patron> patronListIterator = patrons.listIterator();
-                String lines = "";
-                while (patronListIterator.hasNext()) {
-                    Patron patron = patronListIterator.next();
-                    lines = lines.concat(String.format(
-                            '\n' + getString(R.string.patronLine),
-                            patron.getName(),
-                            getString(patron.getKind().getEmailKind())
-                    ));
-                }
-                emailIntent.putExtra(
-                        Intent.EXTRA_TEXT,
-                        String.format(
-                                getString(R.string.body_emailReservation),
-                                formattedArrivalDate,
-                                formattedLeavingDate,
-                                name,
-                                numberOfPersonsString,
-                                lines
-                        )
-                );
-                startActivity(Intent.createChooser(emailIntent, "Send email"));
-            } else {
-                showSettings(null);
-            }
-        }
-    }
 }

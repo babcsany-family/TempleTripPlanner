@@ -1,22 +1,27 @@
 package com.babcsany.templetripplanner.fragments;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.babcsany.templetripplanner.R;
 import com.babcsany.templetripplanner.fragments.dummy.DummyContent;
 import com.babcsany.templetripplanner.fragments.dummy.DummyContent.DummyItem;
 
-import java.util.List;
-
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a recyclerView of Items.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
@@ -25,9 +30,14 @@ public class TempleTripFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
+    @BindView(R.id.list)
+    RecyclerView recyclerView;
+    @BindView(R.id.fab_add)
+    FloatingActionButton fabAdd;
     // TODO: Customize parameters
     private int mColumnCount = 3;
     private OnListFragmentInteractionListener mListener;
+    private Unbinder unbinder;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -59,11 +69,11 @@ public class TempleTripFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_templetrip_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (recyclerView != null) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -74,6 +84,11 @@ public class TempleTripFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -90,6 +105,16 @@ public class TempleTripFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @OnClick(R.id.fab_add)
+    public void onAddTempleTrip() {
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        MainActivityFragment fragment = new MainActivityFragment();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     /**

@@ -49,4 +49,5 @@
     <string name="new_temple_trip">New Temple Trip</string>
     <string name="find_seats">Find Seats</string>
     <string name="my_temple_trips">My Temple Trips</string>
+    <string name="toast_name_must_be_set">Please set your name in Settings before send e-mail to hostel.</string>
 </resources>

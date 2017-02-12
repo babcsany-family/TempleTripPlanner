@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -11,33 +12,34 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.babcsany.templetripplanner.interfaces.ITempleHostelPricingCalculator;
-import com.babcsany.templetripplanner.adapters.PatronAdapter;
 import com.babcsany.templetripplanner.R;
 import com.babcsany.templetripplanner.activities.PatronActivity;
+import com.babcsany.templetripplanner.adapters.PatronAdapter;
 import com.babcsany.templetripplanner.enums.PatronKind;
+import com.babcsany.templetripplanner.interfaces.ITempleHostelPricingCalculator;
 import com.babcsany.templetripplanner.parcels.Patron;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import org.parceler.Parcels;
 
-import static butterknife.ButterKnife.findById;
-
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
+
+import static butterknife.ButterKnife.findById;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -47,16 +49,18 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
     private static final String KEY_DATE_EDIT_TEXT_VIEW = "dateEditTextView";
     private static final String NAME_IN_EMAIL_SIGNATURE = "name_in_email_signature";
     private static final int EDIT_PATRON_REQUEST = 1;
+    private static final int ADD_PATRON_REQUEST = 2;
 
     @BindView(R.id.editTextArrivalDate) EditText editTextArrivalDate;
     @BindView(R.id.textViewDash) TextView textViewDash;
     @BindView(R.id.editTextLeavingDate) EditText editTextLeavingDate;
+
     @BindView(R.id.costOfHostel) TextView costOfHostel;
+
     @BindView(R.id.patronsListView) RecyclerView patronsListView;
     @BindView(R.id.content_main) RelativeLayout contentMain;
     private RecyclerView.LayoutManager layoutManager;
     private Unbinder unbinder;
-
     private ITempleHostelPricingCalculator templeHostelPricingCalculator;
 
     public MainActivityFragment() {
@@ -65,6 +69,7 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         costOfHostel.setText(getString(
@@ -95,6 +100,21 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
         unbinder.unbind();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_new_trip, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addNewPatronMenuItem:
+                addNewPatron();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private ITempleHostelPricingCalculator getTempleHostelPricingCalculator() {
         return templeHostelPricingCalculator;
     }
@@ -105,12 +125,20 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (EDIT_PATRON_REQUEST == requestCode) {
-            if (Activity.RESULT_OK == resultCode) {
-                int patronPosition = data.getIntExtra("patronPosition", -1);
-                ((PatronAdapter)patronsListView.getAdapter())
-                        .set(patronPosition, Parcels.<Patron>unwrap(data.getParcelableExtra("patron")));
-            }
+        switch (requestCode) {
+            case ADD_PATRON_REQUEST:
+                if (Activity.RESULT_OK == resultCode) {
+                    ((PatronAdapter) patronsListView.getAdapter())
+                            .add(Parcels.<Patron>unwrap(data.getParcelableExtra("patron")));
+                }
+                break;
+            case EDIT_PATRON_REQUEST:
+                if (Activity.RESULT_OK == resultCode) {
+                    int patronPosition = data.getIntExtra("patronPosition", -1);
+                    ((PatronAdapter) patronsListView.getAdapter())
+                            .set(patronPosition, Parcels.<Patron>unwrap(data.getParcelableExtra("patron")));
+                }
+                break;
         }
 //        updateTripCost();
         super.onActivityResult(requestCode, resultCode, data);
@@ -167,6 +195,62 @@ public class MainActivityFragment extends Fragment implements DatePickerDialog.O
         args.putInt(KEY_DATE_EDIT_TEXT_VIEW, R.id.editTextLeavingDate);
         dpd.setArguments(args);
         dpd.show(getFragmentManager(), "Datepickerdialog");
+    }
+
+    @OnClick(R.id.fab)
+    public void onSendEmailToTempleHostelButtonClick(View view) {
+        if (editTextArrivalDate.getTag() instanceof Calendar && editTextLeavingDate.getTag() instanceof Calendar) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String name = preferences.getString(NAME_IN_EMAIL_SIGNATURE, null);
+            if (null != name) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.email_templeHostel), null));
+                String formattedArrivalDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                        ((Calendar) editTextArrivalDate.getTag()).getTime());
+                String formattedLeavingDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                        ((Calendar) editTextLeavingDate.getTag()).getTime());
+                final int patronsCount = patronsListView.getAdapter().getItemCount();
+                final String numberOfPersonsString = getResources().getQuantityString(R.plurals.numberOfPersons, patronsCount, patronsCount);
+                emailIntent.putExtra(
+                        Intent.EXTRA_SUBJECT,
+                        String.format(
+                                getString(R.string.subject_reservationEmail),
+                                formattedArrivalDate,
+                                formattedLeavingDate,
+                                numberOfPersonsString
+                        )
+                );
+                List<Patron> patrons = ((PatronAdapter) patronsListView.getAdapter()).getPatrons();
+                final ListIterator<Patron> patronListIterator = patrons.listIterator();
+                String lines = "";
+                while (patronListIterator.hasNext()) {
+                    Patron patron = patronListIterator.next();
+                    lines = lines.concat(String.format(
+                            '\n' + getString(R.string.patronLine),
+                            patron.getName(),
+                            getString(patron.getKind().getEmailKind())
+                    ));
+                }
+                emailIntent.putExtra(
+                        Intent.EXTRA_TEXT,
+                        String.format(
+                                getString(R.string.body_emailReservation),
+                                formattedArrivalDate,
+                                formattedLeavingDate,
+                                name,
+                                numberOfPersonsString,
+                                lines
+                        )
+                );
+                startActivity(Intent.createChooser(emailIntent, "Send email"));
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.toast_name_must_be_set), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void addNewPatron() {
+        Intent intent = new Intent(getActivity(), PatronActivity.class);
+        startActivityForResult(intent, ADD_PATRON_REQUEST);
     }
 
     private long getTripDays() {
