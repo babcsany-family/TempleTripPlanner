@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner.activities;
+package com.babcsany.templetripplanner.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;

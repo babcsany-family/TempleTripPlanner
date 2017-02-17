@@ -1,9 +1,9 @@
-package com.babcsany.templetripplanner.activities;
+package com.babcsany.templetripplanner.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioButton;

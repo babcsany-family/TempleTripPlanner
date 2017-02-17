@@ -2,14 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.babcsany.templetripplanner">
 
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- MyApplication -->
     <application
+            android:name=".App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".activities.MainActivity"
+                android:name=".activity.MainActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,14 +27,20 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.SettingsActivity"
+                android:name=".activity.SettingsActivity"
                 android:label="@string/title_activity_settings"
-                android:parentActivityName=".activities.MainActivity">
+                android:parentActivityName=".activity.MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.babcsany.templetripplanner.activities.MainActivity"/>
+                    android:value="com.babcsany.templetripplanner.activity.MainActivity"/>
         </activity>
-        <activity android:name=".activities.PatronActivity"/>
+        <activity android:name=".activity.PatronActivity"/>
+
+        <!-- Google Play Services -->
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"/>
+
     </application>
 
 </manifest>

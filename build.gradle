@@ -1,15 +1,24 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    ext.dbtoolsVersion = '8.0.0'
+
     repositories {
+        mavenLocal()
+        mavenCentral()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.android.tools.build:gradle:2.3.0-beta4'
+        classpath 'me.tatarka:gradle-retrolambda:3.5.0'
+        classpath "org.dbtools:gradle-dbtools-plugin:$dbtoolsVersion"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0' // version plugin support
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2' // work-around for retrolambda and lint issues (remove when retrolambda is
     }
+
+    // Exclude the version that the android plugin depends on.
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
 
 allprojects {

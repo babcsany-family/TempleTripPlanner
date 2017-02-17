@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner.adapters;
+package com.babcsany.templetripplanner.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

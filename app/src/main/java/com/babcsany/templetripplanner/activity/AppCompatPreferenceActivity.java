@@ -1,4 +1,4 @@
-package com.babcsany.templetripplanner.activities;
+package com.babcsany.templetripplanner.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
